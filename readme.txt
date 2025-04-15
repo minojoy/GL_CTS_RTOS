@@ -32,8 +32,23 @@ GL_CTS run on rtos
 						且节点类型是可执行的 test case（不是 group 或 package）；
 						⚠️ 这点很重要：说明遍历在进入 node → 执行 → 离开 node 的生命周期中，执行发生在“LEAVE_NODE”节点阶段。
 				        ├── iterateTestCase(testCase);
-							├── m_caseExecutor->iterate(testCase)
-        └──app->getResult()
+							├── m_caseExecutor->iterate(testCase): E:\1代码仓库\GL_CTS_TEST\GL_CTS_TEST\GL_CTS_TEST\VK-GL-CTS-main\VK-GL-CTS-								main\framework\common\tcuTestSessionExecutor.cpp:362
+									(1CASE)
+								      ├── ⚠️ E:\1代码仓库\GL_CTS_TEST\GL_CTS_TEST\GL_CTS_TEST\VK-GL-CTS-main\VK-GL-CTS-												  main\external\openglcts\modules\common\glcConfigPackage.cpp:66
+									tcu::TestNode::IterateResult TestCaseWrapper::iterate(tcu::TestCase *testCase)
+										 ├── ✅E:\1代码仓库\GL_CTS_TEST\GL_CTS_TEST\GL_CTS_TEST\VK-GL-CTS-main\VK-GL-CTS-												main\external\openglcts\modules\common\glcConfigListCase.cpp:124
+									(2CASE dEQP-GLES2.functional.shaders.discard.function_uniform)
+										├── ⚠️ E:\1代码仓库\GL_CTS_TEST\GL_CTS_TEST\GL_CTS_TEST\VK-GL-CTS-main\VK-GL-CTS-												main\modules\gles2\tes2TestPackage.cpp
+											TestCaseWrapper::iterate(tcu::TestCase *testCase)
+												 └── TestCaseWrapper::iterate()
+												      ├── clearColor + clear()
+												      ├── testCase->iterate()
+												      |          ⚠️ 
+												      |      				
+												      ├── renderCtx.postIterate()
+												      └── 返回 CONTINUE or STOP
+												
+												        └──app->getResult()
       }
 
 1.App::App(...)
