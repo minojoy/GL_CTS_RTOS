@@ -2,19 +2,29 @@
 GL_CTS run on rtos
 
 一、单测试结构梳理
-  main()
-  └── App::App()App::App()
+  main()                                 //函数入口：GL_CTS_TEST\GL_CTS_TEST\GL_CTS_TEST\VK-GL-CTS-main\VK-GL-CTS-main\framework\platform\tcuMain.cpp
+  └── CommandLine cmdLine(argc, argv)    //命令行参数解析 
+  └── platform(createPlatform())         //创建平台对象（窗口系统 + 渲染上下文）
+  └── archive(cmdLine.getArchiveDir())   //测试数据文件系统，如 .vert, .frag 文件的来源。
+  └── log()                              //生成 XML 或文本格式的测试输出。
+  └── app()                              //✅核心，创建 App 对象
+	App::App(...)
+	 ├── cmdLine.getRunMode()
+	 ├── qpWatchDog_create(...)           --> watchdog线程
+	 ├── qpCrashHandler_create(...)       --> 安装信号钩子
+	 ├── new TestContext(...)             --> 测试上下文初始化
+	 ├── new TestPackageRoot(...)         --> 加载注册测试包
+	 └── runMode 分支:
+		 ├── new TestSessionExecutor(...)    --> 开始测试执行
+		 ├── writeCaselistsToStdout(...)
+		 ├── ...
+  └── LOOP
+      {
+	└──app->iterate()
+        └──app->getResult()
+      }
 
-
-
-  ✅ 1.
-
-  \GL_CTS_TEST\GL_CTS_TEST\GL_CTS_TEST\VK-GL-CTS-main\VK-GL-CTS-main\framework\platform\tcuMain.cpp
-
-
-
-
-
+1.App::App(...)
 	✅ 1. 输出 dEQP 启动信息
 	if (!cmdLine.isSubProcess())
 	{
@@ -75,16 +85,7 @@ GL_CTS run on rtos
 	VERIFY_AMBER_COHERENCY	检查 Amber 能力一致性
 
 
-		App::App(...)
-		 ├── cmdLine.getRunMode()
-		 ├── qpWatchDog_create(...)           --> watchdog线程
-		 ├── qpCrashHandler_create(...)       --> 安装信号钩子
-		 ├── new TestContext(...)             --> 测试上下文初始化
-		 ├── new TestPackageRoot(...)         --> 加载注册测试包
-		 └── runMode 分支:
-			  ├── new TestSessionExecutor(...)    --> 开始测试执行
-			  ├── writeCaselistsToStdout(...)
-			  ├── ...
+
 
 
 
